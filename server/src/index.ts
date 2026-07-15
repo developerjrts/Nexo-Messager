@@ -1,10 +1,10 @@
 import dotenv from "dotenv"
-import ConnectDB from "./src/config/db.js";
+import ConnectDB from "./config/db.js";
 import type { Request, Response } from "express";
 dotenv.config()
 
-import app from "./src/app.js"; 
-import router from "./src/routes/router.js";
+import app from "./app.js"; 
+import router from "./routes/router.js";
 
 const port: number = Number(process.env.PORT) || 5000
 
