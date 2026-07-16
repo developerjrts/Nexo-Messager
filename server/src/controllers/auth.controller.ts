@@ -92,11 +92,16 @@ export const signUp = async(req: Request, res: Response): Promise<void> => {
 
         const hashPassword = await bcrypt.hash(password, 10);
 
+        const fullName = name.replace(" ", "+")
+
+        const avatar = `https://ui-avatars.com/api/?name=${fullName}&background=random`;
+
         const user = userModel.create({
             username,
             name,
             email,
-            password: hashPassword
+            password: hashPassword,
+            avatar
         })
 
         const authSession = createAuthSession((await user)._id.toString())

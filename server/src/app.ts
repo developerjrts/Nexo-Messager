@@ -1,8 +1,14 @@
 import express, { type Application } from "express"; 
 import cors from "cors"; 
 import cookieParser from "cookie-parser";
+import {Server} from "socket.io"
+import { createServer } from "http";
+import router from "./routes/router.js";
+
 
 const app: Application = express(); 
+const server = createServer(app)
+
 
 app.use(cors({ 
   origin: "http://localhost:5173", 
@@ -12,4 +18,22 @@ app.use(cors({
 app.use(express.json()); 
 app.use(cookieParser());
 
-export default app;
+
+app.use("/api", router)
+app.use((req, res) => {
+    res.status(404).json({
+        status: false,
+        message: `Requesting url: ${req.originalUrl} not found.`
+    })
+})
+
+
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true
+  }
+})
+
+export {server, io};

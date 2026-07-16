@@ -11,7 +11,7 @@ const Button = ({
   return (
     <button
     {...props}
-    className={`py-2 flex items-center justify-center px-6 rounded-full bg-[#6001d1] text-natural font-medium text-lg`}
+    className={`py-2 flex items-center justify-center px-6 rounded-full bg-secondary text-natural font-medium text-lg`}
     >
         {children}
   
