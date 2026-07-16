@@ -6,7 +6,7 @@ import messageModel from "./models/message.model.js";
 import conversationModel from "./models/conversation.model.js";
 dotenv.config()
 
-const port: number = Number(process.env.PORT) || 5000
+const port = process.env.PORT || 5000
 
 io.on("connection", (socket) => {
 
@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
        
     })
 
-    socket.on("send-message", async(data): Promise<void> => {
+    socket.on("send-message", async(data) => {
         let newMessage;
        try {
         const { conversationId, userId, text } = data

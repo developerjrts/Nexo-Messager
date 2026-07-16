@@ -1,9 +1,9 @@
-import type { Request, Response } from "express";
+
 import conversationModel from "../models/conversation.model.js";
 import messageModel from "../models/message.model.js";
 import { io } from "../app.js";
 
-export const createOrGetConversation = async(req:Request, res: Response): Promise<void> => {
+export const createOrGetConversation = async(req, res) => {
     try {
 
         const userId = req.user.userId;
@@ -63,14 +63,14 @@ export const createOrGetConversation = async(req:Request, res: Response): Promis
 }
 
 
-export const getConversations = async(req: Request, res: Response): Promise<void> => {
+export const getConversations = async(req, res) => {
     try {
 
         const userId = req.user.userId;
 
         const conversations = await conversationModel.find({
             participants: userId
-        }).populate("participants", "name avatar username").sort({ updatedAt: -1 } as any)
+        }).populate("participants", "name avatar username").sort({ updatedAt: -1 })
 
         if (!conversations) {
             res.status(404).json({
@@ -95,7 +95,7 @@ export const getConversations = async(req: Request, res: Response): Promise<void
 };
 
 
-export const getConversationMessages = async(req: Request, res: Response): Promise<void> => {
+export const getConversationMessages = async(req, res) => {
     try {
         
         const userId = req.user.userId
@@ -103,7 +103,7 @@ export const getConversationMessages = async(req: Request, res: Response): Promi
 
         const messages = await messageModel.find({
             conversationId: conversationId
-        } as any).populate("senderId", "name avatar").sort({ createdAt: 1 });
+        }).populate("senderId", "name avatar").sort({ createdAt: 1 });
 
         if (!messages) {
             res.status(400).json({

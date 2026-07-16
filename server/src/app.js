@@ -1,4 +1,4 @@
-import express, { type Application } from "express"; 
+import express from "express"; 
 import cors from "cors"; 
 import cookieParser from "cookie-parser";
 import {Server} from "socket.io"
@@ -6,7 +6,7 @@ import { createServer } from "http";
 import router from "./routes/router.js";
 
 
-const app: Application = express(); 
+const app = express(); 
 const server = createServer(app)
 
 

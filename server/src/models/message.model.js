@@ -1,16 +1,8 @@
 import { Types } from "mongoose";
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
-export interface Message extends Document {
-    conversationId: Types.ObjectId,
-    senderId: Types.ObjectId, 
-    text: string,
-    readBy: Types.ObjectId,
-    createdAt: string,
-    updatedAt: string
-}
 
-const messageSchema = new mongoose.Schema<Message >({
+const messageSchema = new mongoose.Schema({
     conversationId: {
         type: Types.ObjectId,
         ref: "conversation",
@@ -34,6 +26,6 @@ const messageSchema = new mongoose.Schema<Message >({
     timestamps: true
 });
 
-const messageModel = mongoose.model<Message >("message", messageSchema);
+const messageModel = mongoose.model("message", messageSchema);
 
 export default messageModel

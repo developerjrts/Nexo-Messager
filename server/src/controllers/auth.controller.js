@@ -1,10 +1,9 @@
 import "dotenv/config"
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import type { Request, Response } from "express";
 import createAuthSession from "../config/auth.session.js";
 
-export const signIn = async(req: Request, res: Response): Promise<void> => {
+export const signIn = async(req, res) => {
     try {
 
         const {
@@ -62,7 +61,7 @@ export const signIn = async(req: Request, res: Response): Promise<void> => {
     }
 }
 
-export const signUp = async(req: Request, res: Response): Promise<void> => {
+export const signUp = async(req, res) => {
     try {
         const {
             name, username, email, password, 

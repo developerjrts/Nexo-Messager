@@ -1,23 +1,10 @@
 import "dotenv/config";
-import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.model.js";
 
-export interface AuthRequest extends Request {
-    Request: {
-        user?: {
-            id: string
-        }
-    }
-}
-
-interface JwtPayload {
-    userId: string
-}
-
-export const protect = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const protect = async(req, res, next) => {
     try {
-        let token: string | undefined
+        let token;
 
         if (req.cookies?.auth_session) {
             token = req.cookies.auth_session
@@ -36,7 +23,7 @@ export const protect = async(req: Request, res: Response, next: NextFunction): P
             return;
         };
 
-        const decode = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
 
 
         

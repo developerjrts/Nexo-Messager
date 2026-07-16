@@ -1,7 +1,6 @@
-import type { Request, Response } from "express";
 import userModel from "../models/user.model.js";
 
-export const getUserByUsername = async(req: Request<{ username: string }>, res: Response): Promise<void> => {
+export const getUserByUsername = async(req, res) => {
     try {
         
         const { username } = req.params

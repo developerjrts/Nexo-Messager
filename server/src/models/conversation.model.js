@@ -1,17 +1,6 @@
-import mongoose, { Document, Types } from "mongoose";
+import mongoose from "mongoose";
 
-export interface Conversation extends Document {
-    participants: Types.ObjectId[];
-    lastMessage: Types.ObjectId,
-    createdAt: string,
-    updatedAt: string,
-    isGroup: boolean,
-    groupName?: string,
-    groupAvatar?: string
-    groupAdmin?: string
-}
-
-const conversationSchema = new mongoose.Schema<Conversation>({
+const conversationSchema = new mongoose.Schema({
     participants: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
@@ -37,6 +26,6 @@ const conversationSchema = new mongoose.Schema<Conversation>({
     timestamps: true
 });
 
-const conversationModel = mongoose.model<Conversation>("conversation", conversationSchema);
+const conversationModel = mongoose.model("conversation", conversationSchema);
 
 export default conversationModel;
