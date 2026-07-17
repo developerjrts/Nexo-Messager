@@ -1,5 +1,6 @@
+import { baseUrl } from "@/constants/url"
 import {io} from "socket.io-client"
 
-const socket = io("https://nexo-messager.onrender.com")
+const socket = io(baseUrl)
 
 export default socket

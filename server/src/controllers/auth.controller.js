@@ -2,6 +2,8 @@ import "dotenv/config"
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import createAuthSession from "../config/auth.session.js";
+import transporter from "../config/transporter.js"
+import jwt from "jsonwebtoken";
 
 export const signIn = async(req, res) => {
     try {
@@ -112,9 +114,29 @@ export const signUp = async(req, res) => {
             secure: process.env.NODE_ENV === "production" 
         })
 
+        await transporter.sendMail({
+            from: "Nexo Messanger <noreply@jrts.dev",
+            to: email,
+            subject: "Verification Mail",
+            html: `
+            <div style="
+            font-family: Arial, sans-sarif; max-width: 600px; margin: auto
+            ">
+            <h1>Hey, Hi👋 Welcome to Nexo Messanger</h1>
+            <p>Click the button to verify you mail adress!</p>
+           <a 
+                href="http://localhost:5173/verify-mail?auth_session=${authSession}"
+                style="
+                font-family: Arial, sans-sarif; width: fit; padding: 15px; border-radius: 5px; background-color: #6001d1; color: #FFF; text-decoration: none; font-weight: 700;">
+                Verify E-Mail
+            </a>
+            </div>
+            `
+        })
+
         res.status(201).json({
             status: true,
-            message: "User registered!",
+            message: "Verification mail sent!",
             auth_session: authSession
         })
 
@@ -124,5 +146,36 @@ export const signUp = async(req, res) => {
     } catch (error) {
         console.log(error);
         
+    }
+};
+
+export const verifyMail = async(req, res) => {
+    try {
+        const {auth_session} = req.query;
+
+        const decode = await jwt.verify(
+            auth_session, 
+            process.env.JWT_SECRET
+        )
+
+        const user = await userModel.findByIdAndUpdate(decode.userId, {
+            isVerified: true
+        })
+
+        if (!user) {
+            res.status(401).json({
+                status: false,
+                message: "Invalid session or user deleted."
+            })
+        }
+
+        res.status(201).json({
+            status: true,
+            message: "Email verified."
+        })
+        
+
+    } catch (error) {
+        console.log();
     }
 }

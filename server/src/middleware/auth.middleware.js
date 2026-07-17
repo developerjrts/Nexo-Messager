@@ -38,8 +38,17 @@ export const protect = async(req, res, next) => {
                 status: false,
                 message: "User not found."
             })
+            res.clearCookie("auth_session")
             return;
         };
+
+        if (!user.isVerified) {
+            res.status(401).json({
+                status: false,
+                message: "User must need to be verified"
+            });
+            return;
+        }
 
         req.user = {
             userId: user._id.toString()

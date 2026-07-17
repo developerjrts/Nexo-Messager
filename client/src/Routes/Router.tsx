@@ -5,6 +5,8 @@ import Home from "@/Pages/Home/Home"
 import SignIn from "@/Pages/SignIn/SignIn"
 import SignUp from "@/Pages/SignUp/SignUp"
 import UserPage from "@/Pages/UserPage/UserPage"
+import Users from "@/Pages/Users/Users"
+import VerifyMail from "@/Pages/VerifyMail/VerifyMail"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 const Router = () => {
@@ -20,6 +22,8 @@ const Router = () => {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/user/:username" element={<UserPage />} />
+            <Route path="/users/" element={<Users />} />
+            <Route path="/verify-mail" element={<VerifyMail />} />
             <Route path="*" element={<h1>Page not found</h1>} />
     </Routes>
             </div>

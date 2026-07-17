@@ -4,17 +4,23 @@ import { url } from "@/constants/url"
 import axios, { isAxiosError } from "axios"
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { FaCircleCheck } from "react-icons/fa6";
 import { toast } from "react-toastify"
 
 const UserPage = () => {
 
     const navigate = useNavigate()
 
+    const [loading, setLoading] = useState<boolean >()
+
     const [user, setUser] = useState<IUser >()
+    const [userId, setUserId] = useState<string >()
+    const isUser = userId != user?._id
  
     const {username} = useParams()
 
     const getUser = async(): Promise<void> => {
+        setLoading(true)
         try {
             const {data} = await axios.get(`${url}/user/${username}`, {
                 withCredentials: true
@@ -24,6 +30,7 @@ const UserPage = () => {
 
             if (data.status) {
             setUser(data.user)
+            setUserId(data.user.userId)
             }
             
 
@@ -33,8 +40,12 @@ const UserPage = () => {
                 console.log(error.response?.data);
                 toast.error(error.response?.data.message)
             }
+        }finally {
+            setLoading(false)
         }
     }
+
+    
 
     const createConversation = async(): Promise<void> => {
         const pendingToast = toast.loading("Creating Conversation...", {
@@ -74,6 +85,14 @@ const UserPage = () => {
         getUser()
     }, [username])
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <h1 className="text-2xl">Loading....</h1>
+            </div>
+        )
+    }
+
     if (!user) {
         return (
             <div className="flex h-screen flex-col gap-2 items-center justify-center">
@@ -86,6 +105,7 @@ const UserPage = () => {
         )
     }
 
+
   return (
     <div className="h-screen flex items-center justify-center">
         <div className="bg-gray-500/5 items-center justify-center flex flex-col gap-4 shadow-sm rounded-md p-6">
@@ -97,16 +117,21 @@ const UserPage = () => {
        </div>
      <div>
            <p>Username</p>
-        <h1 className="text-gl font-semibold text-gray-400">@{user?.username}</h1>
+        <h1 className="text-gl flex items-center gap-2 font-semibold text-gray-400">@{user?.username} {user.isVerified && <FaCircleCheck />}</h1>
      </div>
        <div>
          <p>Bio</p>
         <h1 className="text-gl font-semibold text-gray-400">{user?.bio || "I'm Nexo Messanger user"}</h1>
        </div>
        </div>
-       <Button
-       onClick={() => createConversation()}
-       >Message</Button>
+      
+      {!isUser && (
+         <Button
+        onClick={() => createConversation()}
+        >
+        Message
+        </Button>
+      ) }
        {user?.username === username && <a href={`mailto:${user?.email}`}>{user?.email}</a>}
         </div>
     </div>
