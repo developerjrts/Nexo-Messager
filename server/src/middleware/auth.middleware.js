@@ -10,6 +10,9 @@ export const protect = async(req, res, next) => {
             token = req.cookies.auth_session
         }
         
+        console.log({cookie: token});
+        
+
 
         if (!token && req.headers.authorization?.startsWith("Bearer")){
             token = req.headers.authorization.split(" ")[1]
@@ -41,6 +44,9 @@ export const protect = async(req, res, next) => {
         req.user = {
             userId: user._id.toString()
         };
+
+        console.log(req.user);
+        
 
         next()
 

@@ -61,7 +61,7 @@ const UserContainer = () => {
 
 
   return (
-    <div className="h-[100%] p-4 flex flex-col gap-4 w-[30%] bg-gray-500/5 rounded-xl">
+    <div className="h-[100%] p-2 md:p-4 flex flex-col gap-4 w-full bg-gray-500/5 rounded-xl">
       <h1 className="text-2xl font-semibold">
         Conversations
       </h1>

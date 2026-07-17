@@ -4,9 +4,11 @@ import { url } from "@/constants/url"
 import axios from "axios"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import {useNavigate} from "react-router-dom"
 
 const SignIn = () => {
 
+    const navigate = useNavigate()
 
     const [username, setUsername] = useState<string >("")
     const [password, setPassword] = useState<string >("")
@@ -40,6 +42,7 @@ const SignIn = () => {
                     render: data.message,
                     autoClose: 5000
                 })
+                navigate("/")
             }
 
             

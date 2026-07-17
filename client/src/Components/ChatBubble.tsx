@@ -26,6 +26,9 @@ const ChatBubble = ({message, isUser}: props) => {
         }
         `}>
             {message.text}
+        <p className="text-[10px] text-[#fff]">{
+            new Date(message.createdAt).toLocaleString()
+            }</p>
         </div>
         </div>
         </div>

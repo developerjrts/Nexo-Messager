@@ -107,8 +107,8 @@ const ChatPage = () => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit" className="bg-[#6001d1] p-4 rounded-full">
-          <IoSend />
+        <button type="submit" className="bg-[#6001d1] p-2 md:p-4 rounded-full">
+          <IoSend className="-rotate-12" />
         </button>
       </form>
     </div>
