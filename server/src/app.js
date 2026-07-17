@@ -11,7 +11,7 @@ const server = createServer(app)
 
 
 app.use(cors({ 
-  origin: "http://localhost:5173", 
+  origin: ["http://localhost:5173", "https://nexo-messager-flax.vercel.app/"], 
   credentials: true 
 })); 
 
@@ -31,7 +31,7 @@ app.use((req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://nexo-messager-flax.vercel.app/"],
     credentials: true
   }
 })

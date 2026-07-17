@@ -35,7 +35,6 @@ const UserContainer = () => {
       })
 
       setConversation(data.conversations);
-      // server may return userId at top-level
       setUserId(data.userId ?? undefined)
       
 
