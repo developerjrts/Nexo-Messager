@@ -32,7 +32,6 @@ app.use((req, res) => {
 const io = new Server(server, {
   cors: {
     origin: "https://nexo-messager-flax.vercel.app/",
-    credentials: true
   }
 })
 
