@@ -61,7 +61,7 @@ const SignUp = () => {
     }
 
   return (
-    <div className="flex w-screen h-screen p-4 md:p-20">
+    <div className="flex w-screen h-screen p-4 md:p-10">
         <div className="w-[100%] flex">
             {/* Boxes */}
             <div className="bg-gray-500/5 hidden w-1/2 rounded-tl-2xl rounded-bl-2xl md:flex flex-col p-10 gap-6 text-center items-center justify-center">
