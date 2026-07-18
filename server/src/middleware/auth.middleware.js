@@ -10,10 +10,6 @@ export const protect = async(req, res, next) => {
             token = req.cookies.auth_session
         }
         
-        console.log({cookie: token});
-        
-
-
         if (!token && req.headers.authorization?.startsWith("Bearer")){
             token = req.headers.authorization.split(" ")[1]
         }
@@ -28,9 +24,6 @@ export const protect = async(req, res, next) => {
 
         const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-
-        
-
         const user = await userModel.findById(decode.userId);
 
         if (!user) {
@@ -41,14 +34,6 @@ export const protect = async(req, res, next) => {
             res.clearCookie("auth_session")
             return;
         };
-
-        if (!user.isVerified) {
-            res.status(401).json({
-                status: false,
-                message: "User must need to be verified"
-            });
-            return;
-        }
 
         req.user = {
             userId: user._id.toString()

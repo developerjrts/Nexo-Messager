@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import createAuthSession from "../config/auth.session.js";
 import transporter from "../config/transporter.js"
 import jwt from "jsonwebtoken";
+import { verificationMail } from "../services/mail.services.js";
 
 export const signIn = async(req, res) => {
     try {
@@ -97,26 +98,6 @@ export const signUp = async(req, res) => {
 
         const avatar = `https://ui-avatars.com/api/?name=${fullName}&background=random`;
 
-         await transporter.sendMail({
-            from: "Nexo Messanger <noreply@jrts.dev",
-            to: email,
-            subject: "Verification Mail",
-            html: `
-            <div style="
-            font-family: Arial, sans-sarif; max-width: 600px; margin: auto
-            ">
-            <h1>Hey, Hi👋 Welcome to Nexo Messanger</h1>
-            <p>Click the button to verify you mail adress!</p>
-           <a 
-                href="http://localhost:5173/verify-mail?auth_session=${authSession}"
-                style="
-                font-family: Arial, sans-sarif; width: fit; padding: 15px; border-radius: 5px; background-color: #6001d1; color: #FFF; text-decoration: none; font-weight: 700;">
-                Verify E-Mail
-            </a>
-            </div>
-            `
-        })
-
         const user = userModel.create({
             username,
             name,
@@ -127,6 +108,16 @@ export const signUp = async(req, res) => {
 
         const authSession = createAuthSession((await user)._id.toString())
 
+         const sendMail = await verificationMail(email, authSession)
+
+        if (!sendMail) {
+            res.status(400).json({
+                status: false,
+                message: "Failed to sent mail you can verify account later."
+            });
+            return;
+        }
+
         res.cookie("auth_session", authSession, {
             httpOnly: true,
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -134,16 +125,11 @@ export const signUp = async(req, res) => {
             secure: process.env.NODE_ENV === "production" 
         })
 
-       
-
         res.status(201).json({
             status: true,
             message: "Verification mail sent!",
             auth_session: authSession
         })
-
-
-
 
     } catch (error) {
         console.log(error);
