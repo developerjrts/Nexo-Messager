@@ -13,13 +13,6 @@ const SignUp = () => {
     const [email, setEmail] = useState<string >("")
     const [password, setPassword] = useState<string >("")
 
-    console.log({
-        name,
-        username,
-        email,
-        password
-    })
-
     const handleSignUp = async(): Promise<void> => {
 
         if (!name||!password||!username||!email) {
