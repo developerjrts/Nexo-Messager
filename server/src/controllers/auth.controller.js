@@ -62,7 +62,6 @@ export const signIn = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
-            auth_session: authSession
         })
    
     }
@@ -131,7 +130,6 @@ export const signUp = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
-            auth_session: authSession
         })
    
     }
@@ -161,7 +159,7 @@ export const requestVerificationMail = async(req, res) => {
                            <h1>Hey, Hi👋 Welcome to Nexo Messanger</h1>
                            <p>Click the button to verify you mail adress!</p>
                           <a 
-                               href="${process.env.CLIENT_URL}/verify-mail?verification_token=${verificationToken}"
+                               href="${process.env.CLIENT_URL}/verify-mail?verification_token=${token}"
                                style="
                                font-family: Arial, sans-sarif; width: fit; padding: 15px; border-radius: 5px; background-color: #6001d1; color: #FFF; text-decoration: none; font-weight: 700;">
                                Verify E-Mail
@@ -190,7 +188,6 @@ export const requestVerificationMail = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
-            auth_session: authSession
         })
     
     }
@@ -224,7 +221,6 @@ export const verifyMail = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
-            auth_session: authSession
         })
     }
 }
