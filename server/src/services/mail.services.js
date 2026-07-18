@@ -5,7 +5,8 @@ export const verificationMail = async(email, authSession) => {
     try {
         console.log("Sending Mail.");
         
-        const mail = await transporter.sendMail({
+        const mail = await new Promise((resolve, reject) => {
+            transporter.sendMail({
                     from: "Nexo Messenger <noreply@jrts.dev>",
                     to: email,
                     subject: "Verification Mail",
@@ -23,7 +24,15 @@ export const verificationMail = async(email, authSession) => {
                     </a>
                     </div>
                     `
+                }, (err, info) => {
+                    if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(info);
+                }
                 })
+        })
 
                 console.log("Mail Sent.");
 
