@@ -9,6 +9,9 @@ export const protect = async(req, res, next) => {
         if (req.cookies?.auth_session) {
             token = req.cookies.auth_session
         }
+
+        console.log({token});
+        
         
         if (!token && req.headers.authorization?.startsWith("Bearer")){
             token = req.headers.authorization.split(" ")[1]
