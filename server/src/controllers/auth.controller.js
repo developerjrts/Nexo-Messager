@@ -158,12 +158,13 @@ export const requestVerificationMail = async(req, res) => {
             status: true,
             message: "Mail sent"
         })
+        return true
         }else {
             res.status(400).json({
             status: false,
             message: "Failed to send"
         })
-
+        return false
         }
 
         
