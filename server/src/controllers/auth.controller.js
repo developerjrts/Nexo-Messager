@@ -45,10 +45,10 @@ export const signIn = async(req, res) => {
 
         
         res.cookie("auth_session", authSession, {
-            httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            httpOnly: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            secure: process.env.NODE_ENV === "production"
+            secure: process.env.NODE_ENV === "production" 
         })
 
         res.status(200).json({
@@ -115,8 +115,8 @@ export const signUp = async(req, res) => {
 
 
         res.cookie("auth_session", authSession, {
-            httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            httpOnly: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
             secure: process.env.NODE_ENV === "production" 
         })
