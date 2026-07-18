@@ -97,24 +97,7 @@ export const signUp = async(req, res) => {
 
         const avatar = `https://ui-avatars.com/api/?name=${fullName}&background=random`;
 
-        const user = userModel.create({
-            username,
-            name,
-            email,
-            password: hashPassword,
-            avatar
-        })
-
-        const authSession = createAuthSession((await user)._id.toString())
-
-        res.cookie("auth_session", authSession, {
-            httpOnly: true,
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            secure: process.env.NODE_ENV === "production" 
-        })
-
-        await transporter.sendMail({
+         await transporter.sendMail({
             from: "Nexo Messanger <noreply@jrts.dev",
             to: email,
             subject: "Verification Mail",
@@ -133,6 +116,25 @@ export const signUp = async(req, res) => {
             </div>
             `
         })
+
+        const user = userModel.create({
+            username,
+            name,
+            email,
+            password: hashPassword,
+            avatar
+        })
+
+        const authSession = createAuthSession((await user)._id.toString())
+
+        res.cookie("auth_session", authSession, {
+            httpOnly: true,
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            secure: process.env.NODE_ENV === "production" 
+        })
+
+       
 
         res.status(201).json({
             status: true,
