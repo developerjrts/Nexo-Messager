@@ -98,7 +98,7 @@ export const signUp = async(req, res) => {
 
         const avatar = `https://ui-avatars.com/api/?name=${fullName}&background=random`;
 
-        const user = userModel.create({
+        const user = await userModel.create({
             username,
             name,
             email,
@@ -106,9 +106,11 @@ export const signUp = async(req, res) => {
             avatar
         })
 
-        const authSession = createAuthSession((await user)._id.toString())
+        const authSession = createAuthSession(user._id.toString())
 
-         const sendMail = await verificationMail(email, authSession)
+        const sendMail = await verificationMail(email, authSession)
+
+        console.log("4. Mail result:", sendMail);
 
         if (!sendMail) {
             res.status(400).json({
