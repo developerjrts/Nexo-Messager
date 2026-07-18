@@ -16,10 +16,13 @@ export const getUserByUsername = async(req, res) => {
             return
         }
 
+        const isUser = userId === user._id.toString() ? true : false
+
         res.status(200).json({
             status: true,
             user,
-            userId
+            userId,
+            isUser
         })
 
     } catch (error) {

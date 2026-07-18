@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema(
         isOnline: {
             type: Boolean,
             default: false
+        },
+        verificationToken: {
+            type: String,
+            default:""
         }
     }, {
         timestamps: true

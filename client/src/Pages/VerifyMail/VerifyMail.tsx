@@ -1,5 +1,5 @@
 import { url } from '@/constants/url';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,25 +11,35 @@ const VerifyMail = () => {
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState<boolean >()
 
-    const auth_session = searchParams.get("auth_session");
+    const verification_token = searchParams.get("verification_token");
 
     const verifyMail = async() => {
-        setLoading(true)
+        const pendingToast = toast.loading("Verifying verification token")
         try {
             
-            const {data} = await axios.post(`${url}/auth/verify-mail?auth_session=${auth_session}`, {}, {
+            const {data} = await axios.post(`${url}/auth/verify-email?verification_token=${verification_token}`, {}, {
                 withCredentials: true
             })
 
             console.log(data);
 
             if (data.status) {
-                toast.success("Mail verified.")
+                toast.update(pendingToast, {
+                    isLoading: false,
+                    type: "success",
+                    render: "Account Verified."
+                })
             }
             navigate("/")
             
         } catch (error) {
-            console.log(error); 
+            if (isAxiosError(error)) {
+                toast.update(pendingToast, {
+                    type: "error",
+                    isLoading: false,
+                    render: error.response?.data.message
+                })
+            }
         }finally {
             setLoading(false)
         }

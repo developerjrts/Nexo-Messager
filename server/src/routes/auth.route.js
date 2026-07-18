@@ -7,6 +7,7 @@ const authRouter = express.Router();
 
 authRouter.route("/sign-in").post(authController.signIn);
 authRouter.route("/sign-up").post(authController.signUp);
-authRouter.route("/verify-mail").post(authController.verifyMail);
+authRouter.route("/request-email").post(protect, authController.requestVerificationMail);
+authRouter.route("/verify-email").post(protect, authController.verifyMail);
 
 export default authRouter;

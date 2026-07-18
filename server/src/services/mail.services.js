@@ -11,12 +11,12 @@ export const verificationMail = async(email, authSession) => {
                     subject: "Verification Mail",
                     html: `
                     <div style="
-                    font-family: Arial, sans-sarif; max-width: 600px; margin: auto
+                    font-family: Arial, sans-sarif; max-width: 600px; padding: 10px; min-height: fit; margin: auto
                     ">
                     <h1>Hey, Hi👋 Welcome to Nexo Messanger</h1>
                     <p>Click the button to verify you mail adress!</p>
                    <a 
-                        href="http://localhost:5173/verify-mail?auth_session=${authSession}"
+                        href="${process.env.CLIENT_URL}/verify-mail?verification_token=${authSession}"
                         style="
                         font-family: Arial, sans-sarif; width: fit; padding: 15px; border-radius: 5px; background-color: #6001d1; color: #FFF; text-decoration: none; font-weight: 700;">
                         Verify E-Mail

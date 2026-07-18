@@ -1,4 +1,4 @@
-
+import userModel from "../models/user.model.js"
 import conversationModel from "../models/conversation.model.js";
 import messageModel from "../models/message.model.js";
 import { io } from "../app.js";
@@ -27,17 +27,28 @@ export const createOrGetConversation = async(req, res) => {
             return;
         };
 
+        const creator = await userModel.findById(userId);
+
+        
         let conversation = await conversationModel.findOne({isGroup: false,
             participants: {
                 $all: [userId, receiverId]
             }
         }).populate("participants")
-
+        
         if (conversation) {
             res.status(200).json({
                 status: true,
                 conversation
             });
+            return;
+        }
+
+        if (!creator.isVerified) {
+            res.status(401).json({
+                status: false,
+                message: "For creating conversation your account must be verified."
+            })
             return;
         }
 

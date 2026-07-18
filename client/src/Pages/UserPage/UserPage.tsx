@@ -14,8 +14,10 @@ const UserPage = () => {
     const [loading, setLoading] = useState<boolean >()
 
     const [user, setUser] = useState<IUser >()
-    const [userId, setUserId] = useState<string >()
-    const isUser = userId != user?._id
+
+    const [isUser, setIsUser] = useState<boolean >()
+
+
  
     const {username} = useParams()
 
@@ -29,10 +31,10 @@ const UserPage = () => {
             console.log(data);
 
             if (data.status) {
-            setUser(data.user)
-            setUserId(data.user.userId)
-            }
-            
+            setUser(data.user);
+            setIsUser(data.isUser);
+            };
+
 
         } catch (error) {
             console.log(error);
@@ -75,9 +77,45 @@ const UserPage = () => {
         } catch (error) {
             console.log(error);
             if (isAxiosError(error)) {
-                toast.error(error.response?.data?.message)
+                toast.update(pendingToast, {
+                    isLoading: false,
+                    render: error.response?.data.message,
+                    type: "error",
+                    autoClose: 5000
+                })
             }
             
+        }
+    };
+
+
+    const requestVerificationMail = async(): Promise<void> => {
+        const pendingToast = toast.loading("Requesting verification mail.")
+        try {
+            
+            const {data} = await axios.post(`${url}/auth/request-email`, {}, {
+                withCredentials: true
+            })
+
+            console.log(data);
+
+            toast.update(pendingToast, {
+                isLoading: false,
+                render: "Verification mail sent.",
+                type: "success",
+                autoClose: 5000
+            })
+            
+
+        } catch (error) {
+            if(isAxiosError(error)) {
+                toast.update(pendingToast, {
+                isLoading: false,
+                render: error.response?.data.message,
+                type: "error",
+                autoClose: 5000
+            })
+            }
         }
     }
 
@@ -131,6 +169,18 @@ const UserPage = () => {
         >
         Message
         </Button>
+      ) }
+      
+      {isUser  && (
+         <div>
+        {
+            !user.isVerified && (
+                <Button
+                onClick={requestVerificationMail}
+                >Verify</Button>
+            )
+        }
+        </div>
       ) }
        {user?.username === username && <a href={`mailto:${user?.email}`}>{user?.email}</a>}
         </div>

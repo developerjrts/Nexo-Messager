@@ -60,7 +60,12 @@ export const signIn = async(req, res) => {
 
     } catch (error) {
         console.log(error);
-        
+         res.status(500).json({
+            status: false,
+            message: error.message,
+            auth_session: authSession
+        })
+   
     }
 }
 
@@ -97,28 +102,17 @@ export const signUp = async(req, res) => {
         const fullName = name.replace(" ", "+")
 
         const avatar = `https://ui-avatars.com/api/?name=${fullName}&background=random`;
-
+        
         const user = await userModel.create({
             username,
             name,
             email,
             password: hashPassword,
-            avatar
+            avatar,
         })
-
+        
         const authSession = createAuthSession(user._id.toString())
 
-        const sendMail = await verificationMail(email, authSession)
-
-        console.log("4. Mail result:", sendMail);
-
-        if (!sendMail) {
-            res.status(400).json({
-                status: false,
-                message: "Failed to sent mail you can verify account later."
-            });
-            return;
-        }
 
         res.cookie("auth_session", authSession, {
             httpOnly: true,
@@ -129,43 +123,90 @@ export const signUp = async(req, res) => {
 
         res.status(201).json({
             status: true,
-            message: "Verification mail sent!",
+            message: "User registered.",
             auth_session: authSession
         })
 
     } catch (error) {
         console.log(error);
-        
+         res.status(500).json({
+            status: false,
+            message: error.message,
+            auth_session: authSession
+        })
+   
     }
 };
 
+export const requestVerificationMail = async(req, res) => {
+    try {
+
+        const userId = req.user.userId;
+
+        const token = jwt.sign({userId}, process.env.JWT_SECRET, {
+            expiresIn: 15 * 24 * 60 * 60 * 1000
+        });
+
+        const user = await userModel.findByIdAndUpdate(userId, {
+            verificationToken: token
+        });
+
+        const mail = await verificationMail(user.email, user.verificationToken)
+
+        if (mail) {
+            res.status(200).json({
+            status: true,
+            message: "Mail sent"
+        })
+        }else {
+            res.status(400).json({
+            status: false,
+            message: "Failed to send"
+        })
+
+        }
+
+        
+    } catch (error) {
+          console.log(error);
+         res.status(500).json({
+            status: false,
+            message: error.message,
+            auth_session: authSession
+        })
+    
+    }
+}
+
 export const verifyMail = async(req, res) => {
     try {
-        const {auth_session} = req.query;
+        const {verification_token} = req.query;
+        const userId = req.user.userId
 
         const decode = await jwt.verify(
-            auth_session, 
+            verification_token, 
             process.env.JWT_SECRET
         )
 
-        const user = await userModel.findByIdAndUpdate(decode.userId, {
-            isVerified: true
-        })
+        if (userId === decode.userId) {
+            await userModel.findByIdAndUpdate(userId, {
+                isVerified: true
+            });
+        };
 
-        if (!user) {
-            res.status(401).json({
-                status: false,
-                message: "Invalid session or user deleted."
-            })
-        }
-
+       
         res.status(201).json({
             status: true,
             message: "Email verified."
         })
         
 
-    } catch (error) {
-        console.log();
+    } catch (error) {  
+         console.log(error);
+         res.status(500).json({
+            status: false,
+            message: error.message,
+            auth_session: authSession
+        })
     }
 }
