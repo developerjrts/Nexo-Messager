@@ -2,8 +2,8 @@ import "dotenv/config"
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import createAuthSession from "../config/auth.session.js";
-import transporter from "../config/transporter.js"
 import jwt from "jsonwebtoken";
+import { verificationMail } from "../services/mail.services.js";
 
 export const signIn = async(req, res) => {
     try {
@@ -62,6 +62,7 @@ export const signIn = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
+            
         })
    
     }
@@ -130,6 +131,7 @@ export const signUp = async(req, res) => {
          res.status(500).json({
             status: false,
             message: error.message,
+            
         })
    
     }
@@ -148,25 +150,7 @@ export const requestVerificationMail = async(req, res) => {
             verificationToken: token
         });
 
-       const mail = await transporter.sendMail({
-                           from: "Nexo Messenger <noreply@jrts.dev>",
-                           to: user.email,
-                           subject: "Verification Mail",
-                           html: `
-                           <div style="
-                           font-family: Arial, sans-sarif; max-width: 600px; padding: 10px; min-height: fit; margin: auto
-                           ">
-                           <h1>Hey, Hi👋 Welcome to Nexo Messanger</h1>
-                           <p>Click the button to verify you mail adress!</p>
-                          <a 
-                               href="${process.env.CLIENT_URL}/verify-mail?verification_token=${token}"
-                               style="
-                               font-family: Arial, sans-sarif; width: fit; padding: 15px; border-radius: 5px; background-color: #6001d1; color: #FFF; text-decoration: none; font-weight: 700;">
-                               Verify E-Mail
-                           </a>
-                           </div>
-                           `
-                       })
+        const mail = await verificationMail(user.email, user.verificationToken)
 
         if (mail) {
             res.status(200).json({
