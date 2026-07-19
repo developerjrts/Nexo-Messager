@@ -28,7 +28,7 @@ const Users = () => {
     }, [])
 
   return (
-    <div className='h-screen flex flex-col p-4 overflow-scroll justify-center items-center'>
+    <div className='h-screen flex gap-4 flex-col p-4 overflow-scroll justify-center items-center'>
         {
             users.map((user, i) => {
                 return (
